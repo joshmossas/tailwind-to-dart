@@ -1,5 +1,6 @@
 {
     "editor.codeActionsOnSave": {
         "source.fixAll": "always"
-    }
+    },
+    "cSpell.words": ["ARGB", "rgba", "RGBO"]
 }

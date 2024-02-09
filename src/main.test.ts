@@ -1,5 +1,7 @@
 import { test, expect } from "vitest";
 import {
+    rgbStringToDartColor,
+    rgbaStringToDartColor,
     tailwindColorObjectToDartClass,
     tailwindFontSizeObjectToDartClass,
     tailwindSpacingObjectToDartClass,
@@ -28,33 +30,33 @@ test("tailwindColorObjectToDartClass()", () => {
         },
     );
     expect(result.content).toBe(`class Colors {
-  Colors();
+  const Colors();
   /// #FFFFFF
   static const white = Color(0xFFFFFFFF);
   /// #000000
   static const black = Color(0xFF000000);
-  static _ColorsFeedback get feedback => _ColorsFeedback();
+  static const feedback = _ColorsFeedback();
 }
 
 class _ColorsFeedback {
-  _ColorsFeedback();
+  const _ColorsFeedback();
   /// #FF5733
-  final error = Color(0xFFFF5733);
+  final error = const Color(0xFFFF5733);
   /// #33FFAC
-  final success = Color(0xFF33FFAC);
+  final success = const Color(0xFF33FFAC);
   /// #FFB600
-  final warn = Color(0xFFFFB600);
-  _ColorsFeedbackNeutral get neutral => _ColorsFeedbackNeutral();
+  final warn = const Color(0xFFFFB600);
+  final neutral = const _ColorsFeedbackNeutral();
 }
 
 class _ColorsFeedbackNeutral {
-  _ColorsFeedbackNeutral();
+  const _ColorsFeedbackNeutral();
   /// #555555
-  final shade50 = Color(0xFF555555);
+  final shade50 = const Color(0xFF555555);
   /// #000000
-  final dark = Color(0xFF000000);
+  final dark = const Color(0xFF000000);
   /// #FFFFFF
-  final light = Color(0xFFFFFFFF);
+  final light = const Color(0xFFFFFFFF);
 }`);
 });
 
@@ -77,18 +79,18 @@ test("tailwindFontSizeObjectToDartClass()", () => {
         },
     );
     expect(result.content).toBe(`class TwFontSizes {
-  TwFontSizes();
+  const TwFontSizes();
   /// fontSize: 8px
   static const double sm = 8;
   /// fontSize: 16px
   static const double md = 16;
   /// fontSize: 24px
   static const double lg = 24;
-  static _TwFontSizesUtils get utils => _TwFontSizesUtils();
+  static const _TwFontSizesUtils utils = _TwFontSizesUtils();
 }
 
 class _TwFontSizesUtils {
-  _TwFontSizesUtils();
+  const _TwFontSizesUtils();
   /// fontSize: 192px
   final double header = 192;
   /// fontSize: 150px
@@ -114,21 +116,35 @@ test("tailwindSpacingObjectToDartClass()", () => {
         },
     );
     expect(result.content).toBe(`class Space {
-  Space();
+  const Space();
   /// size: 1px
   static const double size1 = 1;
   /// size: 2px
   static const double size2 = 2;
   /// size: 1.5px
   static const double size1Point5 = 1.5;
-  static _SpaceUtils get utils => _SpaceUtils();
+  static const utils = _SpaceUtils();
 }
 
 class _SpaceUtils {
-  _SpaceUtils();
+  const _SpaceUtils();
   /// size: 100px
   final double lg = 100;
   /// size: 150px
   final double xl = 150;
 }`);
+});
+
+test("rgbStringToDartColor()", () => {
+    const result = rgbStringToDartColor("rgb(1,2,3)");
+    expect(result).toBe(`Color.fromRGBO(1, 2, 3, 1)`);
+    const result2 = rgbStringToDartColor("rgb(1 2 3)");
+    expect(result2).toBe(`Color.fromRGBO(1, 2, 3, 1)`);
+});
+
+test("rgbaStringToDartColor()", () => {
+    const result = rgbaStringToDartColor("rgba(1,2,3,0.5)");
+    expect(result).toBe("Color.fromRGBO(1, 2, 3, 0.5)");
+    const result2 = rgbaStringToDartColor("rgba(1 2 3 0.5");
+    expect(result2).toBe(`Color.fromRGBO(1, 2, 3, 0.5)`);
 });

@@ -87,18 +87,33 @@ export function tailwindColorObjectToDartClass(
     const colorSubParts: string[] = [];
     for (const [key, val] of Object.entries(input)) {
         if (typeof val === "string") {
-            const fieldPrefix = isRoot ? `static const` : `final`;
+            const fieldPrefix = isRoot ? "static const" : "final";
+            const valuePrefix = isRoot ? "" : "const ";
 
             if (val.startsWith("#")) {
                 colorParts.push(`/// ${val}`);
                 colorParts.push(
-                    `${fieldPrefix} ${dartSafeKey(key, "shade")} = Color(0xFF${val.toUpperCase().replace("#", "")});`,
+                    `${fieldPrefix} ${dartSafeKey(key, "shade")} = ${valuePrefix}Color(0xFF${val.toUpperCase().replace("#", "")});`,
+                );
+                continue;
+            }
+            if (val.startsWith("rgb(")) {
+                colorParts.push(`/// ${val}`);
+                colorParts.push(
+                    `${fieldPrefix} ${dartSafeKey(key, "shade")} = ${valuePrefix}${rgbStringToDartColor(val)};`,
+                );
+                continue;
+            }
+            if (val.startsWith("rgba(")) {
+                colorParts.push(`/// ${val}`);
+                colorParts.push(
+                    `${fieldPrefix} ${dartSafeKey(key, "shade")} = ${valuePrefix}${rgbaStringToDartColor(val)};`,
                 );
                 continue;
             }
             if (val.toLowerCase() === "transparent") {
                 colorParts.push(
-                    `${fieldPrefix} ${dartSafeKey(key, "shade")} = Color.fromARGB(0, 0, 0, 0);`,
+                    `${fieldPrefix} ${dartSafeKey(key, "shade")} = ${valuePrefix}Color.fromARGB(0, 0, 0, 0);`,
                 );
                 continue;
             }
@@ -117,15 +132,16 @@ export function tailwindColorObjectToDartClass(
                     remValue: context.remValue,
                 },
             );
-            const fieldPrefix = isRoot ? `static ` : "";
+            const fieldPrefix = isRoot ? "static const" : "final";
+            const valuePrefix = isRoot ? "" : "const ";
             colorParts.push(
-                `${fieldPrefix}${result.className} get ${dartSafeKey(key, "shade")} => ${result.className}();`,
+                `${fieldPrefix} ${dartSafeKey(key, "shade")} = ${valuePrefix}${result.className}();`,
             );
             colorSubParts.push(result.content);
             continue;
         }
     }
-    const content = [`class ${className} {`, `  ${className}();`];
+    const content = [`class ${className} {`, `  const ${className}();`];
     for (const part of colorParts) {
         content.push(`  ${part}`);
     }
@@ -142,6 +158,18 @@ export function tailwindColorObjectToDartClass(
 
 export const illegalChars = "0123456789";
 
+export function sizeInputToDouble(input: string, remValue: number): number {
+    let pxValue = 0;
+    if (input.includes("rem")) {
+        pxValue = Number(input.replace("rem", "")) * remValue;
+    } else if (input.includes("em")) {
+        pxValue = Number(input.replace("em", "")) * remValue;
+    } else if (input.includes("px")) {
+        pxValue = Number(input.replace("px", ""));
+    }
+    return pxValue;
+}
+
 export function tailwindFontSizeObjectToDartClass(
     input: TwValueObject,
     context: CodegenContext,
@@ -152,16 +180,21 @@ export function tailwindFontSizeObjectToDartClass(
         : `${context.classPrefix}FontSizes`;
     const parts: string[] = [];
     const subParts: string[] = [];
+    const fieldPrefix = isRoot ? `static const` : `final`;
     for (const [key, value] of Object.entries(input)) {
         if (typeof value === "string") {
-            let pxValue = 0;
-            if (value.includes("rem")) {
-                pxValue = Number(value.replace("rem", "")) * context.remValue;
-            } else if (value.includes("em")) {
-                pxValue = Number(value.replace("em", "")) * context.remValue;
-            } else if (value.includes("px")) {
-                pxValue = Number(value.replace("px", ""));
-            }
+            const pxValue = sizeInputToDouble(value, context.remValue);
+            parts.push(`/// fontSize: ${pxValue}px`);
+            parts.push(
+                `${fieldPrefix} double ${dartSafeKey(key, "size")} = ${pxValue};`,
+            );
+            continue;
+        }
+        if (Array.isArray(value)) {
+            const pxValue = sizeInputToDouble(
+                value[0] as string,
+                context.remValue,
+            );
             const fieldPrefix = isRoot ? `static const` : `final`;
             parts.push(`/// fontSize: ${pxValue}px`);
             parts.push(
@@ -181,14 +214,14 @@ export function tailwindFontSizeObjectToDartClass(
                     classPrefix: context.classPrefix,
                 },
             );
-            const fieldPrefix = isRoot ? `static ` : ``;
+            const valuePrefix = isRoot ? `` : "const ";
             parts.push(
-                `${fieldPrefix}${result.className} get ${dartSafeKey(key, "size")} => ${result.className}();`,
+                `${fieldPrefix} ${result.className} ${dartSafeKey(key, "size")} = ${valuePrefix}${result.className}();`,
             );
             subParts.push(result.content);
         }
     }
-    const content = [`class ${className} {`, `  ${className}();`];
+    const content = [`class ${className} {`, `  const ${className}();`];
     for (const part of parts) {
         content.push(`  ${part}`);
     }
@@ -247,14 +280,15 @@ export function tailwindSpacingObjectToDartClass(
                             : `${className}/${key}`,
                 },
             );
-            const fieldPrefix = isRoot ? `static ` : ``;
+            const fieldPrefix = isRoot ? `static const` : `final`;
+            const valuePrefix = isRoot ? `` : "const ";
             parts.push(
-                `${fieldPrefix}${result.className} get ${dartSafeKey(key, "size")} => ${result.className}();`,
+                `${fieldPrefix} ${dartSafeKey(key, "size")} = ${valuePrefix}${result.className}();`,
             );
             subParts.push(result.content);
         }
     }
-    const content = [`class ${className} {`, `  ${className}();`];
+    const content = [`class ${className} {`, `  const ${className}();`];
     for (const part of parts) {
         content.push(`  ${part}`);
     }
@@ -283,4 +317,45 @@ function dartSafeKey(key: string, fallbackPrefix: string): string {
     return camelCase(finalKey, {
         normalize: true,
     });
+}
+
+export function rgbStringToDartColor(input: string): string | null {
+    const trimmedInput = input.trim();
+    if (!trimmedInput.startsWith("rgb(")) {
+        return null;
+    }
+    const splitter = trimmedInput.includes(",") ? `,` : " ";
+    const [r, g, b] = trimmedInput
+        .replace(`rgb(`, "")
+        .replace(")", "")
+        .trim()
+        .split(splitter)
+        .map((str) => Number(str.trim()));
+    if (Number.isNaN(r) || Number.isNaN(g) || Number.isNaN(b)) {
+        return null;
+    }
+    return `Color.fromRGBO(${r}, ${g}, ${b}, 1)`;
+}
+
+export function rgbaStringToDartColor(input: string): string | null {
+    const trimmedInput = input.trim();
+    if (!trimmedInput.startsWith("rgba(")) {
+        return null;
+    }
+    const splitter = trimmedInput.includes(",") ? `,` : " ";
+    const [r, g, b, a] = trimmedInput
+        .replace("rgba(", "")
+        .replace(")", "")
+        .trim()
+        .split(splitter)
+        .map((str) => Number(str.trim()));
+    if (
+        Number.isNaN(r) ||
+        Number.isNaN(g) ||
+        Number.isNaN(b) ||
+        Number.isNaN(a)
+    ) {
+        return null;
+    }
+    return `Color.fromRGBO(${r}, ${g}, ${b}, ${a})`;
 }
