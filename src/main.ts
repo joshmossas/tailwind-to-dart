@@ -1,5 +1,7 @@
 import { camelCase, pascalCase } from "scule";
-import type resolveTwConfig from "tailwindcss/resolveConfig.js";
+import resolveTwConfig from "tailwindcss/resolveConfig.js";
+import path from "pathe";
+import { loadConfig } from "c12";
 
 interface CodegenContext {
     instancePath: string;
@@ -13,6 +15,30 @@ interface CodegenOptions {
      */
     remValue?: number;
     classPrefix?: string;
+}
+
+export type TailwindConfigResult =
+    | { success: false; data: null }
+    | { success: true; data: ReturnType<typeof resolveTwConfig> };
+
+export async function getResolvedTailwindConfig(
+    configPath: string,
+): Promise<TailwindConfigResult> {
+    const resolvedPath = path.resolve(configPath);
+    const { config } = await loadConfig({
+        configFile: resolvedPath,
+    });
+    if (config === null) {
+        return {
+            success: false,
+            data: null,
+        };
+    }
+    const resolvedConfig = resolveTwConfig(config as any);
+    return {
+        success: true,
+        data: resolvedConfig,
+    };
 }
 
 export function tailwindConfigToDartString(

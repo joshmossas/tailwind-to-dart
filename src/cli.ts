@@ -3,9 +3,7 @@ import { defineCommand, runMain } from "citty";
 import fs from "node:fs";
 import child from "node:child_process";
 import path from "pathe";
-import { loadConfig } from "c12";
-import resolveConfig from "tailwindcss/resolveConfig.js";
-import { tailwindConfigToDartString } from "./main";
+import { getResolvedTailwindConfig, tailwindConfigToDartString } from "./main";
 
 const main = defineCommand({
     args: {
@@ -38,19 +36,17 @@ const main = defineCommand({
         },
     },
     async run(context) {
-        const configPath = path.resolve(context.args.config);
-        const { config } = await loadConfig({
-            configFile: configPath,
-        });
-        if (config === null) {
-            throw new Error(`Error loading config at ${configPath}`);
+        const resolvedConfig = await getResolvedTailwindConfig(
+            context.args.config,
+        );
+        if (!resolvedConfig.success) {
+            throw new Error(`Error loading config at ${context.args.config}`);
         }
         const remValue = Number(context.args.remValue);
         if (Number.isNaN(remValue)) {
             throw new Error(`--remValue must be a valid number`);
         }
-        const resolvedConfig = resolveConfig(config as any);
-        const dartStr = tailwindConfigToDartString(resolvedConfig, {
+        const dartStr = tailwindConfigToDartString(resolvedConfig.data, {
             remValue,
             classPrefix: context.args.classPrefix,
         });

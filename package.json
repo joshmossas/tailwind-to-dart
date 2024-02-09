@@ -1,9 +1,9 @@
 {
     "name": "tailwind-to-dart",
     "version": "0.0.1",
-    "description": "",
+    "description": "Convert your tailwind config to dart code for your flutter apps",
     "type": "module",
-    "main": "index.js",
+    "main": "dist/main.mjs",
     "scripts": {
         "build": "unbuild",
         "lint": "eslint ./src/**/*.ts",
@@ -11,8 +11,20 @@
         "test": "vitest run",
         "test:watch": "vitest"
     },
-    "keywords": [],
-    "author": "",
+    "keywords": [
+        "tailwind",
+        "tailwindcss",
+        "flutter",
+        "dart"
+    ],
+    "author": "Joshua Sosso",
+    "files": [
+        "dist",
+        "src"
+    ],
+    "bin": {
+        "tailwind-to-dart": "./dist/cli.mjs"
+    },
     "license": "ISC",
     "dependencies": {
         "c12": "^1.7.0",
