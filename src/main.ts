@@ -86,12 +86,23 @@ export function tailwindColorObjectToDartClass(
     const colorParts: string[] = [];
     const colorSubParts: string[] = [];
     for (const [key, val] of Object.entries(input)) {
-        if (typeof val === "string" && val.startsWith("#")) {
-            colorParts.push(`/// ${val}`);
+        if (typeof val === "string") {
             const fieldPrefix = isRoot ? `static const` : `final`;
-            colorParts.push(
-                `${fieldPrefix} ${dartSafeKey(key, "shade")} = Color(0xFF${val.toUpperCase().replace("#", "")});`,
-            );
+
+            if (val.startsWith("#")) {
+                colorParts.push(`/// ${val}`);
+                colorParts.push(
+                    `${fieldPrefix} ${dartSafeKey(key, "shade")} = Color(0xFF${val.toUpperCase().replace("#", "")});`,
+                );
+                continue;
+            }
+            if (val.toLowerCase() === "transparent") {
+                colorParts.push(
+                    `${fieldPrefix} ${dartSafeKey(key, "shade")} = Color.fromARGB(0, 0, 0, 0);`,
+                );
+                continue;
+            }
+            console.warn(`Unsupported color value ${val}`);
             continue;
         }
         if (typeof val === "object") {

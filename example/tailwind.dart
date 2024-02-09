@@ -4,6 +4,7 @@ import "dart:ui";
 
 class Colors {
   Colors();
+  static const transparent = Color.fromARGB(0, 0, 0, 0);
 
   /// #000
   static const black = Color(0xFF000);

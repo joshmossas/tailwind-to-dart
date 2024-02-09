@@ -9,7 +9,8 @@
         "lint": "eslint ./src/**/*.ts",
         "format": "prettier --write ./src",
         "test": "vitest run",
-        "test:watch": "vitest"
+        "test:watch": "vitest",
+        "generate-example": "./dist/cli.mjs --config ./example/tailwind.config.js --output ./example/tailwind.dart --format"
     },
     "keywords": [
         "tailwind",
