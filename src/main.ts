@@ -2,6 +2,7 @@ import { camelCase, pascalCase } from "scule";
 import resolveTwConfig from "tailwindcss/resolveConfig.js";
 import path from "pathe";
 import { loadConfig } from "c12";
+import { consola } from "consola";
 
 interface CodegenContext {
     instancePath: string;
@@ -65,8 +66,43 @@ export function tailwindConfigToDartString(
             startingContext,
         ).content,
         "",
-        tailwindSpacingObjectToDartClass(
+        tailwindSizeValueObjectToDartClass(
+            "Spacing",
+            "size",
+            "spacing",
             config.theme.spacing as unknown as TwValueObject,
+            startingContext,
+        ).content,
+        "",
+        tailwindSizeValueObjectToDartClass(
+            "LineHeight",
+            "size",
+            "line-height",
+            config.theme.lineHeight,
+            startingContext,
+        ).content,
+        "",
+        tailwindSizeValueObjectToDartClass(
+            "LetterSpacing",
+            "size",
+            "letter-spacing",
+            config.theme.letterSpacing,
+            startingContext,
+        ).content,
+        "",
+        tailwindSizeValueObjectToDartClass(
+            "BorderRadius",
+            "size",
+            "border-radius",
+            config.theme.borderRadius,
+            startingContext,
+        ).content,
+        "",
+        tailwindSizeValueObjectToDartClass(
+            "BorderWidth",
+            "size",
+            "border-width",
+            config.theme.borderWidth,
             startingContext,
         ).content,
     ];
@@ -117,7 +153,7 @@ export function tailwindColorObjectToDartClass(
                 );
                 continue;
             }
-            console.warn(`Unsupported color value ${val}`);
+            consola.warn(`Unsupported color: "${val}"`);
             continue;
         }
         if (typeof val === "object") {
@@ -157,18 +193,6 @@ export function tailwindColorObjectToDartClass(
 }
 
 export const illegalChars = "0123456789";
-
-export function sizeInputToDouble(input: string, remValue: number): number {
-    let pxValue = 0;
-    if (input.includes("rem")) {
-        pxValue = Number(input.replace("rem", "")) * remValue;
-    } else if (input.includes("em")) {
-        pxValue = Number(input.replace("em", "")) * remValue;
-    } else if (input.includes("px")) {
-        pxValue = Number(input.replace("px", ""));
-    }
-    return pxValue;
-}
 
 export function tailwindFontSizeObjectToDartClass(
     input: TwValueObject,
@@ -219,7 +243,9 @@ export function tailwindFontSizeObjectToDartClass(
                 `${fieldPrefix} ${result.className} ${dartSafeKey(key, "size")} = ${valuePrefix}${result.className}();`,
             );
             subParts.push(result.content);
+            continue;
         }
+        consola.warn(`Unsupported font-size: "${JSON.stringify(value)}"`);
     }
     const content = [`class ${className} {`, `  const ${className}();`];
     for (const part of parts) {
@@ -236,57 +262,48 @@ export function tailwindFontSizeObjectToDartClass(
     };
 }
 
-export function tailwindSpacingObjectToDartClass(
+export function tailwindSizeValueObjectToDartClass(
+    classSuffix: string,
+    fieldSuffix: string,
+    commentName: string,
     input: TwValueObject,
     context: CodegenContext,
 ): { className: string; content: string } {
     const isRoot = context.instancePath.length === 0;
-    const className = !isRoot
-        ? `_${pascalCase(context.instancePath.split("/").join("_"), { normalize: true })}`
-        : `${context.classPrefix}Space`;
+    const className = getClassName(context, classSuffix);
     const parts: string[] = [];
     const subParts: string[] = [];
+    const fieldPrefix = isRoot ? `static const` : "final";
     for (const [key, val] of Object.entries(input)) {
         if (typeof val === "string") {
-            let pxValue = 0;
-            if (val.includes("rem")) {
-                pxValue = Number(val.replace("rem", "")) * context.remValue;
-            } else if (val.includes("em")) {
-                pxValue = Number(val.replace("em", "")) * context.remValue;
-            } else if (val.includes("px")) {
-                pxValue = Number(val.replace("px", ""));
-            } else {
-                console.warn(
-                    `Unable to convert spacing value {"${key}": "${val}"}`,
-                );
-                continue;
-            }
-            const fieldPrefix = isRoot ? `static const` : `final`;
-            parts.push(`/// size: ${pxValue}px`);
+            const pxValue = sizeInputToDouble(val, context.remValue);
+            parts.push(`/// ${commentName}: ${pxValue}`);
             parts.push(
-                `${fieldPrefix} double ${dartSafeKey(key, "size")} = ${pxValue};`,
+                `${fieldPrefix} double ${dartSafeKey(key, fieldSuffix)} = ${pxValue};`,
             );
             continue;
         }
         if (typeof val === "object") {
-            const result = tailwindSpacingObjectToDartClass(
-                val as TwValueObject,
+            const result = tailwindSizeValueObjectToDartClass(
+                classSuffix,
+                fieldSuffix,
+                commentName,
+                val,
                 {
+                    instancePath: isRoot
+                        ? `${className}/${key}`
+                        : `${context.instancePath}/key`,
                     classPrefix: context.classPrefix,
                     remValue: context.remValue,
-                    instancePath:
-                        context.instancePath.length > 0
-                            ? `${context.instancePath}/${key}`
-                            : `${className}/${key}`,
                 },
             );
-            const fieldPrefix = isRoot ? `static const` : `final`;
-            const valuePrefix = isRoot ? `` : "const ";
             parts.push(
-                `${fieldPrefix} ${dartSafeKey(key, "size")} = ${valuePrefix}${result.className}();`,
+                `${fieldPrefix} ${dartSafeKey(key, fieldSuffix)} = ${result.className}();`,
             );
             subParts.push(result.content);
+            continue;
         }
+        consola.warn(`Unsupported ${commentName}: "${JSON.stringify(val)}"`);
     }
     const content = [`class ${className} {`, `  const ${className}();`];
     for (const part of parts) {
@@ -303,6 +320,14 @@ export function tailwindSpacingObjectToDartClass(
     };
 }
 
+function getClassName(context: CodegenContext, suffix: string): string {
+    const isRoot = context.instancePath.length === 0;
+    const className = !isRoot
+        ? `_${pascalCase(context.instancePath.split("/").join("_"), { normalize: true })}`
+        : `${context.classPrefix}${suffix}`;
+    return className;
+}
+
 function dartSafeKey(key: string, fallbackPrefix: string): string {
     let finalKey = key;
     if (finalKey.includes(".")) {
@@ -313,10 +338,27 @@ function dartSafeKey(key: string, fallbackPrefix: string): string {
             finalKey = `${fallbackPrefix}_${finalKey}`;
         }
     }
+    if (finalKey.toLowerCase() === "default") {
+        finalKey = `${fallbackPrefix}_${finalKey}`;
+    }
 
     return camelCase(finalKey, {
         normalize: true,
     });
+}
+
+export function sizeInputToDouble(input: string, remValue: number): number {
+    let pxValue = 0;
+    if (input.includes("rem")) {
+        pxValue = Number(input.replace("rem", "")) * remValue;
+    } else if (input.includes("em")) {
+        pxValue = Number(input.replace("em", "")) * remValue;
+    } else if (input.includes("px")) {
+        pxValue = Number(input.replace("px", ""));
+    } else {
+        pxValue = Number(input.trim());
+    }
+    return pxValue;
 }
 
 export function rgbStringToDartColor(input: string): string | null {

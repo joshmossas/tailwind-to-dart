@@ -2,9 +2,10 @@ import { test, expect } from "vitest";
 import {
     rgbStringToDartColor,
     rgbaStringToDartColor,
+    sizeInputToDouble,
     tailwindColorObjectToDartClass,
     tailwindFontSizeObjectToDartClass,
-    tailwindSpacingObjectToDartClass,
+    tailwindSizeValueObjectToDartClass,
 } from "./main";
 
 test("tailwindColorObjectToDartClass()", () => {
@@ -99,7 +100,10 @@ class _TwFontSizesUtils {
 });
 
 test("tailwindSpacingObjectToDartClass()", () => {
-    const result = tailwindSpacingObjectToDartClass(
+    const result = tailwindSizeValueObjectToDartClass(
+        "Spacing",
+        "size",
+        "spacing",
         {
             1: "1px",
             "1.5": "1.5px",
@@ -115,22 +119,22 @@ test("tailwindSpacingObjectToDartClass()", () => {
             classPrefix: "",
         },
     );
-    expect(result.content).toBe(`class Space {
-  const Space();
-  /// size: 1px
+    expect(result.content).toBe(`class Spacing {
+  const Spacing();
+  /// spacing: 1
   static const double size1 = 1;
-  /// size: 2px
+  /// spacing: 2
   static const double size2 = 2;
-  /// size: 1.5px
+  /// spacing: 1.5
   static const double size1Point5 = 1.5;
-  static const utils = _SpaceUtils();
+  static const utils = _SpacingUtils();
 }
 
-class _SpaceUtils {
-  const _SpaceUtils();
-  /// size: 100px
+class _SpacingUtils {
+  const _SpacingUtils();
+  /// spacing: 100
   final double lg = 100;
-  /// size: 150px
+  /// spacing: 150
   final double xl = 150;
 }`);
 });
@@ -147,4 +151,19 @@ test("rgbaStringToDartColor()", () => {
     expect(result).toBe("Color.fromRGBO(1, 2, 3, 0.5)");
     const result2 = rgbaStringToDartColor("rgba(1 2 3 0.5");
     expect(result2).toBe(`Color.fromRGBO(1, 2, 3, 0.5)`);
+});
+
+test("sizeInputToDouble()", () => {
+    const inputs: Record<string, number> = {
+        "1.5px": 1.5,
+        "10px": 10,
+        "1rem": 16,
+        "2rem": 32,
+        "0.5em": 8,
+        "0.25em": 4,
+    };
+    for (const key of Object.keys(inputs)) {
+        const result = sizeInputToDouble(key, 16);
+        expect(result).toBe(inputs[key]);
+    }
 });

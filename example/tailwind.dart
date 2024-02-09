@@ -901,111 +901,229 @@ class FontSizes {
   static const double size9xl = 128;
 }
 
-class Space {
-  const Space();
+class Spacing {
+  const Spacing();
 
-  /// size: 0px
+  /// spacing: 0
   static const double size0 = 0;
 
-  /// size: 4px
+  /// spacing: 4
   static const double size1 = 4;
 
-  /// size: 8px
+  /// spacing: 8
   static const double size2 = 8;
 
-  /// size: 12px
+  /// spacing: 12
   static const double size3 = 12;
 
-  /// size: 16px
+  /// spacing: 16
   static const double size4 = 16;
 
-  /// size: 20px
+  /// spacing: 20
   static const double size5 = 20;
 
-  /// size: 24px
+  /// spacing: 24
   static const double size6 = 24;
 
-  /// size: 28px
+  /// spacing: 28
   static const double size7 = 28;
 
-  /// size: 32px
+  /// spacing: 32
   static const double size8 = 32;
 
-  /// size: 36px
+  /// spacing: 36
   static const double size9 = 36;
 
-  /// size: 40px
+  /// spacing: 40
   static const double size10 = 40;
 
-  /// size: 44px
+  /// spacing: 44
   static const double size11 = 44;
 
-  /// size: 48px
+  /// spacing: 48
   static const double size12 = 48;
 
-  /// size: 56px
+  /// spacing: 56
   static const double size14 = 56;
 
-  /// size: 64px
+  /// spacing: 64
   static const double size16 = 64;
 
-  /// size: 80px
+  /// spacing: 80
   static const double size20 = 80;
 
-  /// size: 96px
+  /// spacing: 96
   static const double size24 = 96;
 
-  /// size: 112px
+  /// spacing: 112
   static const double size28 = 112;
 
-  /// size: 128px
+  /// spacing: 128
   static const double size32 = 128;
 
-  /// size: 144px
+  /// spacing: 144
   static const double size36 = 144;
 
-  /// size: 160px
+  /// spacing: 160
   static const double size40 = 160;
 
-  /// size: 176px
+  /// spacing: 176
   static const double size44 = 176;
 
-  /// size: 192px
+  /// spacing: 192
   static const double size48 = 192;
 
-  /// size: 208px
+  /// spacing: 208
   static const double size52 = 208;
 
-  /// size: 224px
+  /// spacing: 224
   static const double size56 = 224;
 
-  /// size: 240px
+  /// spacing: 240
   static const double size60 = 240;
 
-  /// size: 256px
+  /// spacing: 256
   static const double size64 = 256;
 
-  /// size: 288px
+  /// spacing: 288
   static const double size72 = 288;
 
-  /// size: 320px
+  /// spacing: 320
   static const double size80 = 320;
 
-  /// size: 384px
+  /// spacing: 384
   static const double size96 = 384;
 
-  /// size: 1px
+  /// spacing: 1
   static const double px = 1;
 
-  /// size: 2px
+  /// spacing: 2
   static const double size0Point5 = 2;
 
-  /// size: 6px
+  /// spacing: 6
   static const double size1Point5 = 6;
 
-  /// size: 10px
+  /// spacing: 10
   static const double size2Point5 = 10;
 
-  /// size: 14px
+  /// spacing: 14
   static const double size3Point5 = 14;
+}
+
+class LineHeight {
+  const LineHeight();
+
+  /// line-height: 12
+  static const double size3 = 12;
+
+  /// line-height: 16
+  static const double size4 = 16;
+
+  /// line-height: 20
+  static const double size5 = 20;
+
+  /// line-height: 24
+  static const double size6 = 24;
+
+  /// line-height: 28
+  static const double size7 = 28;
+
+  /// line-height: 32
+  static const double size8 = 32;
+
+  /// line-height: 36
+  static const double size9 = 36;
+
+  /// line-height: 40
+  static const double size10 = 40;
+
+  /// line-height: 1
+  static const double none = 1;
+
+  /// line-height: 1.25
+  static const double tight = 1.25;
+
+  /// line-height: 1.375
+  static const double snug = 1.375;
+
+  /// line-height: 1.5
+  static const double normal = 1.5;
+
+  /// line-height: 1.625
+  static const double relaxed = 1.625;
+
+  /// line-height: 2
+  static const double loose = 2;
+}
+
+class LetterSpacing {
+  const LetterSpacing();
+
+  /// letter-spacing: -0.8
+  static const double tighter = -0.8;
+
+  /// letter-spacing: -0.4
+  static const double tight = -0.4;
+
+  /// letter-spacing: 0
+  static const double normal = 0;
+
+  /// letter-spacing: 0.4
+  static const double wide = 0.4;
+
+  /// letter-spacing: 0.8
+  static const double wider = 0.8;
+
+  /// letter-spacing: 1.6
+  static const double widest = 1.6;
+}
+
+class BorderRadius {
+  const BorderRadius();
+
+  /// border-radius: 0
+  static const double none = 0;
+
+  /// border-radius: 2
+  static const double sm = 2;
+
+  /// border-radius: 4
+  static const double sizeDefault = 4;
+
+  /// border-radius: 6
+  static const double md = 6;
+
+  /// border-radius: 8
+  static const double lg = 8;
+
+  /// border-radius: 12
+  static const double xl = 12;
+
+  /// border-radius: 16
+  static const double size2xl = 16;
+
+  /// border-radius: 24
+  static const double size3xl = 24;
+
+  /// border-radius: 9999
+  static const double full = 9999;
+}
+
+class BorderWidth {
+  const BorderWidth();
+
+  /// border-width: 0
+  static const double size0 = 0;
+
+  /// border-width: 2
+  static const double size2 = 2;
+
+  /// border-width: 4
+  static const double size4 = 4;
+
+  /// border-width: 8
+  static const double size8 = 8;
+
+  /// border-width: 1
+  static const double sizeDefault = 1;
 }

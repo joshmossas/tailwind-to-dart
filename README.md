@@ -2,11 +2,25 @@
 
 This library transforms a [Tailwind](https://tailwindcss.com/) config into dart code that you can use in your Flutter apps. This allow you to reuse the same colors, spacing, and font sizes without having to duplicate code.
 
-**Currently supports the following Tailwind properties**:
+**Supported Tailwind properties**:
 
 -   Colors
 -   Spacing
 -   Font Sizes
+-   Line Heights
+-   Letter Spacing
+-   Border Radius
+-   Border Width
+
+**Supported value types**
+
+-   Hex colors
+-   RGB colors
+-   RGBA colors
+-   numbers
+-   px
+-   em
+-   rem
 
 ## CLI Usage
 
