@@ -122,35 +122,40 @@ export function tailwindColorObjectToDartClass(
         : `${context.classPrefix}Colors`;
     const colorParts: string[] = [];
     const colorSubParts: string[] = [];
+    const requireKeyPrefix = hasUnsafeKey(Object.keys(input));
     for (const [key, val] of Object.entries(input)) {
         if (typeof val === "string") {
             const fieldPrefix = isRoot ? "static const" : "final";
             const valuePrefix = isRoot ? "" : "const ";
 
             if (val.startsWith("#")) {
+                const finalVal =
+                    val.length === 4
+                        ? `0xFF${val.replace("#", "").toUpperCase()}${val.replace("#", "").toUpperCase()}`
+                        : `0xFF${val.replace("#", "").toUpperCase()}`;
                 colorParts.push(`/// ${val}`);
                 colorParts.push(
-                    `${fieldPrefix} ${dartSafeKey(key, "shade")} = ${valuePrefix}Color(0xFF${val.toUpperCase().replace("#", "")});`,
+                    `${fieldPrefix} ${dartSafeKey(key, "shade", requireKeyPrefix)} = ${valuePrefix}Color(${finalVal});`,
                 );
                 continue;
             }
             if (val.startsWith("rgb(")) {
                 colorParts.push(`/// ${val}`);
                 colorParts.push(
-                    `${fieldPrefix} ${dartSafeKey(key, "shade")} = ${valuePrefix}${rgbStringToDartColor(val)};`,
+                    `${fieldPrefix} ${dartSafeKey(key, "shade", requireKeyPrefix)} = ${valuePrefix}${rgbStringToDartColor(val)};`,
                 );
                 continue;
             }
             if (val.startsWith("rgba(")) {
                 colorParts.push(`/// ${val}`);
                 colorParts.push(
-                    `${fieldPrefix} ${dartSafeKey(key, "shade")} = ${valuePrefix}${rgbaStringToDartColor(val)};`,
+                    `${fieldPrefix} ${dartSafeKey(key, "shade", requireKeyPrefix)} = ${valuePrefix}${rgbaStringToDartColor(val)};`,
                 );
                 continue;
             }
             if (val.toLowerCase() === "transparent") {
                 colorParts.push(
-                    `${fieldPrefix} ${dartSafeKey(key, "shade")} = ${valuePrefix}Color.fromARGB(0, 0, 0, 0);`,
+                    `${fieldPrefix} ${dartSafeKey(key, "shade", requireKeyPrefix)} = ${valuePrefix}Color.fromARGB(0, 0, 0, 0);`,
                 );
                 continue;
             }
@@ -172,7 +177,7 @@ export function tailwindColorObjectToDartClass(
             const fieldPrefix = isRoot ? "static const" : "final";
             const valuePrefix = isRoot ? "" : "const ";
             colorParts.push(
-                `${fieldPrefix} ${dartSafeKey(key, "shade")} = ${valuePrefix}${result.className}();`,
+                `${fieldPrefix} ${dartSafeKey(key, "shade", false)} = ${valuePrefix}${result.className}();`,
             );
             colorSubParts.push(result.content);
             continue;
@@ -206,12 +211,13 @@ export function tailwindFontSizeObjectToDartClass(
     const parts: string[] = [];
     const subParts: string[] = [];
     const fieldPrefix = isRoot ? `static const` : `final`;
+    const requireKeyPrefix = hasUnsafeKey(Object.keys(input));
     for (const [key, value] of Object.entries(input)) {
         if (typeof value === "string") {
             const pxValue = sizeInputToDouble(value, context.remValue);
             parts.push(`/// fontSize: ${pxValue}px`);
             parts.push(
-                `${fieldPrefix} double ${dartSafeKey(key, "size")} = ${pxValue};`,
+                `${fieldPrefix} double ${dartSafeKey(key, "size", requireKeyPrefix)} = ${pxValue};`,
             );
             continue;
         }
@@ -223,7 +229,7 @@ export function tailwindFontSizeObjectToDartClass(
             const fieldPrefix = isRoot ? `static const` : `final`;
             parts.push(`/// fontSize: ${pxValue}px`);
             parts.push(
-                `${fieldPrefix} double ${dartSafeKey(key, "size")} = ${pxValue};`,
+                `${fieldPrefix} double ${dartSafeKey(key, "size", requireKeyPrefix)} = ${pxValue};`,
             );
             continue;
         }
@@ -241,7 +247,7 @@ export function tailwindFontSizeObjectToDartClass(
             );
             const valuePrefix = isRoot ? `` : "const ";
             parts.push(
-                `${fieldPrefix} ${result.className} ${dartSafeKey(key, "size")} = ${valuePrefix}${result.className}();`,
+                `${fieldPrefix} ${result.className} ${dartSafeKey(key, "size", requireKeyPrefix)} = ${valuePrefix}${result.className}();`,
             );
             subParts.push(result.content);
             continue;
@@ -275,12 +281,13 @@ export function tailwindSizeValueObjectToDartClass(
     const parts: string[] = [];
     const subParts: string[] = [];
     const fieldPrefix = isRoot ? `static const` : "final";
+    const requireKeyPrefix = hasUnsafeKey(Object.keys(input));
     for (const [key, val] of Object.entries(input)) {
         if (typeof val === "string") {
             const pxValue = sizeInputToDouble(val, context.remValue);
             parts.push(`/// ${commentName}: ${pxValue}`);
             parts.push(
-                `${fieldPrefix} double ${dartSafeKey(key, fieldSuffix)} = ${pxValue};`,
+                `${fieldPrefix} double ${dartSafeKey(key, fieldSuffix, requireKeyPrefix)} = ${pxValue};`,
             );
             continue;
         }
@@ -299,7 +306,7 @@ export function tailwindSizeValueObjectToDartClass(
                 },
             );
             parts.push(
-                `${fieldPrefix} ${dartSafeKey(key, fieldSuffix)} = ${result.className}();`,
+                `${fieldPrefix} ${dartSafeKey(key, fieldSuffix, false)} = ${result.className}();`,
             );
             subParts.push(result.content);
             continue;
@@ -329,10 +336,28 @@ function getClassName(context: CodegenContext, suffix: string): string {
     return className;
 }
 
-function dartSafeKey(key: string, fallbackPrefix: string): string {
+function hasUnsafeKey(keys: string[]): boolean {
+    for (const key of keys) {
+        for (const char of illegalChars) {
+            if (key.startsWith(char)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+function dartSafeKey(
+    key: string,
+    fallbackPrefix: string,
+    prefixIsRequired: boolean,
+): string {
     let finalKey = key;
     if (finalKey.includes(".")) {
         finalKey = finalKey.replaceAll(".", "_point_");
+    }
+    if (prefixIsRequired) {
+        return camelCase(`${fallbackPrefix}_${finalKey}`);
     }
     for (const char of illegalChars) {
         if (finalKey.startsWith(char)) {

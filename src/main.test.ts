@@ -11,6 +11,7 @@ import {
 test("tailwindColorObjectToDartClass()", () => {
     const result = tailwindColorObjectToDartClass(
         {
+            whiteAbbr: "#FFF",
             white: "#FFFFFF",
             black: "#000000",
             feedback: {
@@ -32,6 +33,8 @@ test("tailwindColorObjectToDartClass()", () => {
     );
     expect(result.content).toBe(`class Colors {
   const Colors();
+  /// #FFF
+  static const whiteAbbr = Color(0xFFFFFFFF);
   /// #FFFFFF
   static const white = Color(0xFFFFFFFF);
   /// #000000
@@ -55,9 +58,9 @@ class _ColorsFeedbackNeutral {
   /// #555555
   final shade50 = const Color(0xFF555555);
   /// #000000
-  final dark = const Color(0xFF000000);
+  final shadeDark = const Color(0xFF000000);
   /// #FFFFFF
-  final light = const Color(0xFFFFFFFF);
+  final shadeLight = const Color(0xFFFFFFFF);
 }`);
 });
 
