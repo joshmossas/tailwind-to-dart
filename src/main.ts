@@ -117,9 +117,9 @@ export function tailwindColorObjectToDartClass(
     context: CodegenContext,
 ): { className: string; content: string } {
     const isRoot = context.instancePath.length === 0;
-    const className = !isRoot
-        ? `_${pascalCase(context.instancePath.split("/").join("_"), { normalize: true })}`
-        : `${context.classPrefix}Colors`;
+    const className = isRoot
+        ? `${context.classPrefix}Colors`
+        : `_${pascalCase(context.instancePath.split("/").join("_"), { normalize: true })}`;
     const colorParts: string[] = [];
     const colorSubParts: string[] = [];
     const requireKeyPrefix = hasUnsafeKey(Object.keys(input));
@@ -205,9 +205,9 @@ export function tailwindFontSizeObjectToDartClass(
     context: CodegenContext,
 ): { className: string; content: string } {
     const isRoot = context.instancePath.length === 0;
-    const className = !isRoot
-        ? `_${pascalCase(context.instancePath.split("/").join("_"), { normalize: true })}`
-        : `${context.classPrefix}FontSizes`;
+    const className = isRoot
+        ? `${context.classPrefix}FontSizes`
+        : `_${pascalCase(context.instancePath.split("/").join("_"), { normalize: true })}`;
     const parts: string[] = [];
     const subParts: string[] = [];
     const fieldPrefix = isRoot ? `static const` : `final`;
@@ -330,9 +330,9 @@ export function tailwindSizeValueObjectToDartClass(
 
 function getClassName(context: CodegenContext, suffix: string): string {
     const isRoot = context.instancePath.length === 0;
-    const className = !isRoot
-        ? `_${pascalCase(context.instancePath.split("/").join("_"), { normalize: true })}`
-        : `${context.classPrefix}${suffix}`;
+    const className = isRoot
+        ? `${context.classPrefix}${suffix}`
+        : `_${pascalCase(context.instancePath.split("/").join("_"), { normalize: true })}`;
     return className;
 }
 

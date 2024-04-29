@@ -1,7 +1,7 @@
 #! /usr/bin/env node
-import { defineCommand, runMain } from "citty";
 import fs from "node:fs";
 import child from "node:child_process";
+import { defineCommand, runMain } from "citty";
 import path from "pathe";
 import { getResolvedTailwindConfig, tailwindConfigToDartString } from "./main";
 
@@ -44,7 +44,7 @@ const main = defineCommand({
         }
         const remValue = Number(context.args.remValue);
         if (Number.isNaN(remValue)) {
-            throw new Error(`--remValue must be a valid number`);
+            throw new TypeError(`--remValue must be a valid number`);
         }
         const dartStr = tailwindConfigToDartString(resolvedConfig.data, {
             remValue,
@@ -58,4 +58,4 @@ const main = defineCommand({
     },
 });
 
-void runMain(main);
+runMain(main);

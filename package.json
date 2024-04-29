@@ -4,6 +4,7 @@
     "description": "Convert your tailwind config to dart code for your flutter apps",
     "type": "module",
     "main": "dist/main.mjs",
+    "packageManager": "pnpm@9.0.6",
     "scripts": {
         "build": "unbuild",
         "lint": "eslint ./src/**/*.ts",
@@ -28,27 +29,27 @@
     },
     "license": "ISC",
     "dependencies": {
-        "c12": "^1.7.0",
-        "citty": "^0.1.5",
+        "c12": "^1.10.0",
+        "citty": "^0.1.6",
         "consola": "^3.2.3",
+        "eslint-config-unjs": "^0.2.1",
         "pathe": "^1.1.2",
         "scule": "^1.3.0",
-        "tailwindcss": "^3.4.1"
+        "tailwindcss": "^3.4.3"
     },
     "devDependencies": {
-        "@types/node": "^20.11.17",
-        "@typescript-eslint/eslint-plugin": "^6.21.0",
-        "@typescript-eslint/parser": "^6.21.0",
-        "eslint": "^8.56.0",
+        "@types/node": "^20.12.7",
+        "@typescript-eslint/eslint-plugin": "^7.8.0",
+        "@typescript-eslint/parser": "^7.8.0",
+        "eslint": "^8.57.0",
         "eslint-config-prettier": "^9.1.0",
-        "eslint-config-standard-with-typescript": "^43.0.1",
-        "eslint-plugin-import": "^2.25.2",
-        "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
-        "eslint-plugin-promise": "^6.0.0",
+        "eslint-plugin-import": "^2.29.1",
+        "eslint-plugin-n": "^17.3.1",
+        "eslint-plugin-promise": "^6.1.1",
         "prettier": "^3.2.5",
-        "typescript": "^5.3.3",
+        "typescript": "^5.4.5",
         "unbuild": "^2.0.0",
-        "vite": "^5.1.0",
-        "vitest": "^1.2.2"
+        "vite": "^5.2.10",
+        "vitest": "^1.5.2"
     }
 }
