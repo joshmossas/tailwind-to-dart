@@ -307,7 +307,7 @@ export function tailwindSizeValueObjectToDartClass(
                 {
                     instancePath: isRoot
                         ? `${className}/${key}`
-                        : `${context.instancePath}/key`,
+                        : `${context.instancePath}/${key}`,
                     classPrefix: context.classPrefix,
                     remValue: context.remValue,
                 },
