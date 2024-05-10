@@ -1,6 +1,6 @@
 {
     "name": "tailwind-to-dart",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "description": "Convert your tailwind config to dart code for your flutter apps",
     "type": "module",
     "main": "dist/main.mjs",
