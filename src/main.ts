@@ -106,6 +106,13 @@ export function tailwindConfigToDartString(
             config.theme.borderWidth,
             startingContext,
         ).content,
+        tailwindSizeValueObjectToDartClass(
+            "Opacity",
+            "p",
+            "opacity",
+            config.theme.opacity,
+            startingContext,
+        ).content,
     ];
     return parts.join("\n");
 }

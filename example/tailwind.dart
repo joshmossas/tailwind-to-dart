@@ -1128,3 +1128,70 @@ class BorderWidth {
   /// border-width: 1
   static const double sizeDEFAULT = 1;
 }
+
+class Opacity {
+  const Opacity();
+
+  /// opacity: 0
+  static const double p0 = 0;
+
+  /// opacity: 0.05
+  static const double p5 = 0.05;
+
+  /// opacity: 0.1
+  static const double p10 = 0.1;
+
+  /// opacity: 0.15
+  static const double p15 = 0.15;
+
+  /// opacity: 0.2
+  static const double p20 = 0.2;
+
+  /// opacity: 0.25
+  static const double p25 = 0.25;
+
+  /// opacity: 0.3
+  static const double p30 = 0.3;
+
+  /// opacity: 0.35
+  static const double p35 = 0.35;
+
+  /// opacity: 0.4
+  static const double p40 = 0.4;
+
+  /// opacity: 0.45
+  static const double p45 = 0.45;
+
+  /// opacity: 0.5
+  static const double p50 = 0.5;
+
+  /// opacity: 0.55
+  static const double p55 = 0.55;
+
+  /// opacity: 0.6
+  static const double p60 = 0.6;
+
+  /// opacity: 0.65
+  static const double p65 = 0.65;
+
+  /// opacity: 0.7
+  static const double p70 = 0.7;
+
+  /// opacity: 0.75
+  static const double p75 = 0.75;
+
+  /// opacity: 0.8
+  static const double p80 = 0.8;
+
+  /// opacity: 0.85
+  static const double p85 = 0.85;
+
+  /// opacity: 0.9
+  static const double p90 = 0.9;
+
+  /// opacity: 0.95
+  static const double p95 = 0.95;
+
+  /// opacity: 1
+  static const double p100 = 1;
+}

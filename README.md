@@ -11,6 +11,7 @@ This library transforms a [Tailwind](https://tailwindcss.com/) config into dart 
 -   Letter Spacing
 -   Border Radius
 -   Border Width
+-   Opacity
 
 **Supported value types**
 
