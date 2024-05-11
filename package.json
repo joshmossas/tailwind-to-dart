@@ -30,7 +30,7 @@
     "bin": {
         "tailwind-to-dart": "./dist/cli.mjs"
     },
-    "license": "ISC",
+    "license": "MIT",
     "dependencies": {
         "c12": "^1.10.0",
         "citty": "^0.1.6",
