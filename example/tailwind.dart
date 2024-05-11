@@ -1194,4 +1194,37 @@ class Opacity {
 
   /// opacity: 1
   static const double p100 = 1;
+  static const myCustomOpacity = _OpacityMyCustomOpacity();
+}
+
+class _OpacityMyCustomOpacity {
+  const _OpacityMyCustomOpacity();
+  final foo = const _OpacityMyCustomOpacityFoo();
+  final bar = const _OpacityMyCustomOpacityBar();
+}
+
+class _OpacityMyCustomOpacityFoo {
+  const _OpacityMyCustomOpacityFoo();
+
+  /// opacity: 0
+  final double p0 = 0;
+
+  /// opacity: 0.5
+  final double p50 = 0.5;
+
+  /// opacity: 100
+  final double p100 = 100;
+}
+
+class _OpacityMyCustomOpacityBar {
+  const _OpacityMyCustomOpacityBar();
+
+  /// opacity: 0.15
+  final double light = 0.15;
+
+  /// opacity: 0.5
+  final double medium = 0.5;
+
+  /// opacity: 1
+  final double opaque = 1;
 }

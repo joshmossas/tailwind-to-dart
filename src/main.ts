@@ -299,6 +299,7 @@ export function tailwindSizeValueObjectToDartClass(
             continue;
         }
         if (typeof val === "object") {
+            const valuePrefix = isRoot ? "" : `const `;
             const result = tailwindSizeValueObjectToDartClass(
                 classSuffix,
                 fieldSuffix,
@@ -313,7 +314,7 @@ export function tailwindSizeValueObjectToDartClass(
                 },
             );
             parts.push(
-                `${fieldPrefix} ${dartSafeKey(key, fieldSuffix, false)} = ${result.className}();`,
+                `${fieldPrefix} ${dartSafeKey(key, fieldSuffix, false)} = ${valuePrefix}${result.className}();`,
             );
             subParts.push(result.content);
             continue;
