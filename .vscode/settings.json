@@ -2,5 +2,6 @@
     "editor.codeActionsOnSave": {
         "source.fixAll": "always"
     },
+    "eslint.experimental.useFlatConfig": true,
     "cSpell.words": ["ARGB", "Codegen", "consola", "rgba", "RGBO"]
 }
