@@ -10,11 +10,11 @@
     },
     "scripts": {
         "build": "unbuild",
-        "lint": "eslint ./src/**/*.ts",
+        "lint": "eslint ./src",
         "format": "prettier --write ./src",
         "test": "vitest run",
         "test:watch": "vitest",
-        "generate-example": "./dist/cli.mjs --config ./example/tailwind.config.js --output ./example/tailwind.dart --format"
+        "generate-example": "pnpm run build && ./dist/cli.mjs --config ./example/tailwind.config.js --output ./example/tailwind.dart --format"
     },
     "keywords": [
         "tailwind",
@@ -40,9 +40,9 @@
         "tailwindcss": "^3.4.4"
     },
     "devDependencies": {
-        "@types/node": "^20.14.7",
-        "@typescript-eslint/eslint-plugin": "^7.13.1",
-        "@typescript-eslint/parser": "^7.13.1",
+        "@types/node": "^20.14.9",
+        "@typescript-eslint/eslint-plugin": "^7.14.1",
+        "@typescript-eslint/parser": "^7.14.1",
         "eslint": "^8.57.0",
         "eslint-config-prettier": "^9.1.0",
         "eslint-config-unjs": "^0.3.2",
@@ -52,7 +52,7 @@
         "prettier": "^3.3.2",
         "typescript": "^5.5.2",
         "unbuild": "^2.0.0",
-        "vite": "^5.3.1",
+        "vite": "^5.3.2",
         "vitest": "^1.6.0"
     }
 }
