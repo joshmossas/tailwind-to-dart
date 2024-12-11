@@ -4,24 +4,24 @@ This library transforms a [Tailwind](https://tailwindcss.com/) config into dart 
 
 **Supported Tailwind properties**:
 
--   Colors
--   Spacing
--   Font Sizes
--   Line Heights
--   Letter Spacing
--   Border Radius
--   Border Width
--   Opacity
+- Colors
+- Spacing
+- Font Sizes
+- Line Heights
+- Letter Spacing
+- Border Radius
+- Border Width
+- Opacity
 
 **Supported value types**
 
--   Hex colors
--   RGB colors
--   RGBA colors
--   numbers
--   px
--   em
--   rem
+- Hex colors
+- RGB colors
+- RGBA colors
+- numbers
+- px
+- em
+- rem
 
 ## CLI Usage
 
@@ -37,12 +37,13 @@ tailwind-to-dart --config <path-to-tailwind-config> --output <path-to-output-fil
 
 ## Options
 
-| flag      | type    | description                                           |
-| --------- | ------- | ----------------------------------------------------- |
-| --config  | string  | path to your tailwind.config.js                       |
-| --output  | string  | path to the desired output location                   |
-| --format  | boolean | automatically run "dart format" on the generated file |
-| --remSize | string  | the desired base font-size. (Default is 16)           |
+| flag          | required | type    | description                                           |
+| ------------- | -------- | ------- | ----------------------------------------------------- |
+| --config      | yes      | string  | path to your tailwind.config.js                       |
+| --output      | yes      | string  | path to the desired output file                       |
+| --format      | no       | boolean | automatically run "dart format" on the generated file |
+| --remSize     | no       | string  | the desired base font-size. (Default is 16)           |
+| --classPrefix | no       | string  | add a prefix to the generated classes                 |
 
 ## Typescript/Javascript Usage
 
