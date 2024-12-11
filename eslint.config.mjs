@@ -4,6 +4,7 @@ export default unjs(
     {
         rules: {
             "unicorn/no-null": 0,
+
         },
     },
     prettier,
