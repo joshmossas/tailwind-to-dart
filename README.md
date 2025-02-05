@@ -1,4 +1,4 @@
-_Note: This currently works with tailwind V3. I'm currenrly waiting for the out come of this discussion to determine how to proceed. (https://github.com/tailwindlabs/tailwindcss/discussions/14764)_
+_Note: Tailwind V4 is currently not supported. I'm waiting for the outcome of the following discussion to determine how to proceed. - https://github.com/tailwindlabs/tailwindcss/discussions/14764_
 
 # Tailwind to Dart
 
