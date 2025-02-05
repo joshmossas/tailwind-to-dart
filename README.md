@@ -1,3 +1,5 @@
+_Note: This currently works with tailwind V3. I'm currenrly waiting for the out come of this discussion to determine how to proceed. (https://github.com/tailwindlabs/tailwindcss/discussions/14764)_
+
 # Tailwind to Dart
 
 This library transforms a [Tailwind](https://tailwindcss.com/) config into dart code that you can use in your Flutter apps. This allow you to reuse the same colors, spacing, and font sizes without having to duplicate code.
